@@ -4,6 +4,10 @@
 
 ##### Enhancements
 
+* Add Info.plist DSL to Specifications  
+  [Eric Amorde](https://github.com/amorde)
+  [CocoaPods/CocoaPods#8753](https://github.com/CocoaPods/CocoaPods/issues/8753)
+
 * Allow test specs to specify an `app_host_name` to point to an app spec whose
   application is used as the test's app host.  
   [jkap](https://github.com/jkap)
