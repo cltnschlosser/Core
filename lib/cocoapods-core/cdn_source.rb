@@ -308,7 +308,7 @@ module Pod
       download_from_url(partial_url, file_remote_url, etag)
     end
 
-    def download_from_url(partial_url, file_remote_url, etag)
+    def download_from_url(partial_url, file_remote_url, etag, retries = MAX_NUMBER_OF_RETRIES)
       path = repo + partial_url
       etag_path = path.sub_ext(path.extname + '.etag')
 
@@ -333,6 +333,14 @@ module Pod
       when 404
         debug "CDN: #{name} Relative path couldn't be downloaded: #{partial_url} Response: #{response.status_code}"
         nil
+      when 502
+        if retries <= 0
+          raise Informative, "CDN: #{name} Relative path couldn't be downloaded: #{partial_url} Response: 502"
+        else
+          sleep 5
+          debug "CDN: #{name} Relative path: #{partial_url} error: 502 - retrying"
+          download_from_url(partial_url, file_remote_url, etag, retries - 1)
+        end
       else
         raise Informative, "CDN: #{name} Relative path couldn't be downloaded: #{partial_url} Response: #{response.status_code}"
       end
